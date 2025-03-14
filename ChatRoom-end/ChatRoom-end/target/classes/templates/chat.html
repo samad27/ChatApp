@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chat Room</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #222831, #393E46);
+            color: #EEEEEE;
+        }
+        .chat-container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #393E46;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #messages {
+            height: 300px;
+            overflow-y: scroll;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #222831;
+            border-radius: 5px;
+            background-color: #222831;
+        }
+        .message-input {
+            display: flex;
+        }
+        .message-input input {
+            flex: 1;
+            margin-right: 10px;
+            background-color: #222831;
+            color: #EEEEEE;
+            border: 1px solid #00ADB5;
+        }
+        .btn-success {
+            background-color: #00ADB5;
+            border: none;
+            color: #EEEEEE;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<div class="chat-container">
+    <h4>Welcome, <span id="username" class="text-primary"></span>!</h4>
+    <div id="messages"></div>
+    <div class="message-input">
+        <input type="text" id="messageInput" class="form-control" placeholder="Enter message...">
+        <button class="btn btn-success" onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+    var stompClient = null;
+    var username = new URLSearchParams(window.location.search).get('username');
+    var roomId = new URLSearchParams(window.location.search).get('roomId');
+    document.getElementById('username').textContent = username;
+
+    function connect() {
+        var socket = new SockJS('/chat-websocket');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function(frame) {
+            stompClient.subscribe('/topic/messages/' + roomId, function(messageOutput) {
+                showMessage(JSON.parse(messageOutput.body));
+            });
+            stompClient.send("/app/chat/" + roomId, {}, JSON.stringify({'username': username, 'content': username + ' has joined the chat'}));
+        });
+    }
+
+    function sendMessage() {
+        var messageInput = document.getElementById('messageInput').value;
+        stompClient.send("/app/chat/" + roomId, {}, JSON.stringify({'username': username, 'content': messageInput}));
+        document.getElementById('messageInput').value = '';
+    }
+
+    function showMessage(message) {
+        var messagesDiv = document.getElementById('messages');
+        var messageElement = document.createElement('p');
+        messageElement.appendChild(document.createTextNode(message.username + ": " + message.content));
+        messagesDiv.appendChild(messageElement);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    connect();
+</script>
+</body>
+</html>
