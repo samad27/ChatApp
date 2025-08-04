@@ -44,25 +44,29 @@ Installation
 - Chat Room
 ![image](https://github.com/user-attachments/assets/c7006516-6d09-4df9-b98f-72bb306a6b6b)
 
-
+```
 🔧 Project Structure
 📦 src
-├── 📂 main
-│   ├── 📂 java
-│   │   └── 📂 com/goldencat/chatroom
-│   │       ├── 📜 ChatroomApplication.java       # Main Spring Boot app
-│   │       ├── 📂 config
-│   │       │   └── 📜 WebSocketConfig.java       # WebSocket configuration
-│   │       ├── 📂 controller
-│   │       │   └── 📜 ChatController.java       # Handles chat logic
-│   │       └── 📂 model
-│   │           └── 📜 ChatMessage.java          # Message model
-│   └── 📂 resources
-│       ├── 📂 static                             # CSS/JS
-│       └── 📂 templates
-│           ├── 📜 chat.html                      # Chat UI
-│           └── 📜 login.html                     # Login UI
-📜 pom.xml                                        # Maven dependencies
+└── 📂 main
+    ├── 📂 java
+    │   └── 📂 com
+    │       └── 📂 goldencat
+    │           └── 📂 chatroom
+    │               ├── 📄 ChatroomApplication.java       # Main Spring Boot app
+    │               ├── 📂 config
+    │               │   └── 📄 WebSocketConfig.java       # WebSocket configuration
+    │               ├── 📂 controller
+    │               │   └── 📄 ChatController.java        # Handles chat logic
+    │               └── 📂 model
+    │                   └── 📄 ChatMessage.java           # Message model
+    └── 📂 resources
+        ├── 📂 static                                     # CSS/JS
+        └── 📂 templates
+            ├── 📄 chat.html                              # Chat UI
+            └── 📄 login.html                             # Login UI
+
+📄 pom.xml                                                # Maven dependencies
+```
 
 
 🎯 Future Enhancements
